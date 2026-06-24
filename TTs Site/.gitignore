@@ -1,11 +1,9 @@
 node_modules/
-TTs Site/node_modules/
-TTs Site/dist/
-Mars Extension/node_modules/
+dist/
+.vite/
 .DS_Store
 .env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 coverage/
-.vercel
