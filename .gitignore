@@ -1,4 +1,5 @@
 node_modules/
+.vite/
 TTs Site/node_modules/
 TTs Site/dist/
 Mars Extension/node_modules/

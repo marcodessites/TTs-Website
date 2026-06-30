@@ -1,6 +1,13 @@
+@font-face {
+  font-family: 'ComiCrazy Regular';
+  src: local('ComiCrazy Regular');
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root {
   color-scheme: light;
-  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI Emoji', sans-serif;
+  font-family: 'ComiCrazy Regular', 'Comic Sans MS', cursive, sans-serif;
   background: #f8f1dc;
   color: #282828;
 }
@@ -39,7 +46,7 @@ textarea {
   border-bottom: 1px solid rgba(255, 255, 255, 0.58);
   box-shadow: 0 18px 30px rgba(56, 50, 70, 0.08);
   display: grid;
-  grid-template-columns: min-content 1fr min-content;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 20px;
 }
@@ -48,15 +55,28 @@ textarea {
   justify-self: start;
 }
 
+.top-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
 .brand-logo {
   font-weight: 800;
   color: #2c2434;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-size: 0.92rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.shop-button {
+.home-button,
+.shop-button,
+.event-button {
   border: none;
   background: #1b6dfd;
   color: white;
@@ -66,10 +86,10 @@ textarea {
   cursor: pointer;
   transition: transform 180ms ease, box-shadow 180ms ease;
   box-shadow: 0 14px 24px rgba(26, 76, 195, 0.18);
-  justify-self: center;
 }
 
-.shop-button:hover {
+.shop-button:hover,
+.event-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 30px rgba(26, 76, 195, 0.24);
 }
@@ -236,18 +256,22 @@ textarea {
 }
 
 .books-grid,
+.events-grid,
 .book-detail-page {
   display: grid;
   gap: 24px;
 }
 
-.books-grid {
+.books-grid,
+.events-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   margin-top: 24px;
 }
 
 .book-card,
-.book-detail-card {
+.book-detail-card,
+.event-card,
+.home-card {
   background: white;
   border-radius: 32px;
   padding: 28px;
@@ -256,12 +280,44 @@ textarea {
   overflow: hidden;
 }
 
+.home-card.home-card-hero {
+  background-image: url('https://images.unsplash.com/photo-1544717305-996b815c338c?auto=format&fit=crop&w=1200&q=80');
+  background-size: cover;
+  background-position: center;
+  min-height: 360px;
+  padding: 0;
+}
+
+.home-card-content {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  border-radius: 28px;
+  padding: 34px 30px;
+  max-width: 760px;
+  margin: auto;
+}
+
+.home-card-content h2,
+.home-card-content p {
+  margin: 0 0 18px;
+}
+
+.home-card-content h2 {
+  font-size: clamp(2rem, 3vw, 2.8rem);
+}
+
+.home-card-content p {
+  color: #4d4360;
+  line-height: 1.75;
+}
+
 .book-card {
   text-align: center;
 }
 
 .book-card:hover,
-.book-detail-card:hover {
+.book-detail-card:hover,
+.event-card:hover {
   transform: translateY(-6px);
 }
 
@@ -312,7 +368,8 @@ textarea {
 }
 
 .book-card h2,
-.book-detail-card h2 {
+.book-detail-card h2,
+.event-card h3 {
   font-size: 1.25rem;
   margin: 0 0 14px;
   color: #2f2344;
@@ -334,10 +391,10 @@ textarea {
 }
 
 .card-button,
-.action-button {
-  width: 100%;
+.action-button,
+.rsvp-button {
   border: none;
-  background: #fd6ea1;
+  background: #22c55e;
   color: white;
   padding: 14px 0;
   border-radius: 999px;
@@ -346,10 +403,18 @@ textarea {
   transition: transform 180ms ease, background 180ms ease;
 }
 
+.rsvp-button {
+  width: fit-content;
+  min-width: 160px;
+  padding: 14px 28px;
+  margin: 0 auto;
+}
+
 .card-button:hover,
-.action-button:hover {
+.action-button:hover,
+.rsvp-button:hover {
   transform: translateY(-2px);
-  background: #e63d79;
+  background: #16a34a;
 }
 
 .detail-controls {
@@ -394,6 +459,67 @@ textarea {
   font-family: inherit;
   color: #342d47;
   background: #fff;
+}
+
+.event-card {
+  display: grid;
+  gap: 16px;
+}
+
+.event-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.event-date,
+.event-location {
+  margin: 0;
+  color: #5d5372;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+.event-location {
+  font-weight: 600;
+}
+
+.event-link {
+  color: #1b6dfd;
+  text-decoration: none;
+}
+
+.updates-page .home-card {
+  background: #fff;
+  border-radius: 32px;
+  padding: 28px;
+}
+
+.updates-list {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.update-item {
+  border: 1px solid rgba(80, 67, 104, 0.12);
+  border-radius: 20px;
+  padding: 18px;
+  background: #fcfbff;
+}
+
+.update-item strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #2d2a52;
+}
+
+.update-item p {
+  margin: 0;
+  color: #5d5372;
+  line-height: 1.6;
 }
 
 .page-footer {
@@ -497,12 +623,12 @@ textarea {
 
 @media (max-width: 900px) {
   .top-bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     gap: 16px;
   }
 
-  .center-button {
-    justify-self: end;
+  .top-center {
+    justify-self: center;
   }
 
   .cart-panel {
@@ -518,21 +644,30 @@ textarea {
     padding: 18px 16px;
   }
 
-  .brand-logo,
+  .top-left,
   .cart-button {
     justify-self: start;
   }
 
-  .shop-button {
+  .top-center {
+    grid-column: 1 / -1;
+    justify-self: center;
     width: 100%;
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
-  .books-grid {
+  .shop-button,
+  .event-button {
+    width: calc(50% - 6px);
+  }
+
+  .books-grid,
+  .events-grid {
     grid-template-columns: 1fr;
   }
 
   .page-footer {
     padding: 24px 18px 32px;
   }
-
 }

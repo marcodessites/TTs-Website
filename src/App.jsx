@@ -36,12 +36,64 @@ const books = [
   },
 ];
 
+const events = [
+  {
+    title: 'Countdown to Christmas in July 🎄',
+    date: 'Fri, Jul 24',
+    location: 'Fredericksburg Convention Center',
+    url: 'https://www.tammycauthor.com/event-details/countdown-to-christmas-in-july-2026-07-24-11-00',
+  },
+  {
+    title: '33rd Manassas African American Heritage Festival',
+    date: 'Sat, Aug 01',
+    location: 'Manassas',
+    url: 'https://www.tammycauthor.com/event-details/33rd-manassas-african-american-heritage-festival',
+  },
+  {
+    title: 'Back to School Bash & Craft Fair',
+    date: 'Sat, Aug 08',
+    location: 'Wilderness Presidential Resort',
+    url: 'https://www.tammycauthor.com/event-details/back-to-school-bash-craft-fair',
+  },
+  {
+    title: 'The Fredericksburg Independent Book Festival',
+    date: 'Sat, Oct 03',
+    location: 'Fredericksburg',
+    url: 'https://www.tammycauthor.com/event-details/the-fredericksburg-independent-book-festival',
+  },
+  {
+    title: 'Brooke Point Dance Team Fall Craft Fair',
+    date: 'Sat, Nov 07',
+    location: 'Brooke Point High School',
+    url: 'https://www.tammycauthor.com/event-details/brooke-point-dance-team-fall-craft-fair',
+  },
+];
+
+const updates = [
+  { date: '2026-06-30', text: 'Added hidden /updates route and updates page.' },
+  { date: '2026-06-29', text: 'Separated Home and Shop pages with distinct content.' },
+  { date: '2026-06-28', text: 'Implemented events page with RSVP buttons and centered header.' },
+  { date: '2026-06-27', text: 'Added book detail pages and cart functionality.' },
+];
+
 const buildBookPath = (book) =>
   `/${book.slug}-${book.id}-${book.price.replace('$', '')}-${book.type.replace(/\s+/g, '-').toLowerCase()}`;
 
 const parseRoute = (path) => {
   if (path === '/' || path === '/home') {
     return { page: 'home', bookId: null };
+  }
+
+  if (path === '/shop') {
+    return { page: 'shop', bookId: null };
+  }
+
+  if (path === '/events') {
+    return { page: 'events', bookId: null };
+  }
+
+  if (path === '/updates') {
+    return { page: 'updates', bookId: null };
   }
 
   const matched = books.find((book) => path.startsWith(`/${book.slug}-${book.id}`));
@@ -69,12 +121,32 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.title = route.page === 'book' && currentBook ? `${currentBook.title} | TC Books` : 'TC Books Shop';
+    if (route.page === 'book' && currentBook) {
+      document.title = `${currentBook.title} | TC Books`;
+    } else if (route.page === 'events') {
+      document.title = 'Events | TC Books';
+    } else if (route.page === 'updates') {
+      document.title = 'Updates | TC Books';
+    } else if (route.page === 'shop') {
+      document.title = 'Shop TC Books';
+    } else {
+      document.title = 'Welcome to TC Books';
+    }
   }, [route, currentBook]);
 
   const goHome = () => {
     window.history.pushState({}, '', '/');
     setRoute({ page: 'home', bookId: null });
+  };
+
+  const goShop = () => {
+    window.history.pushState({}, '', '/shop');
+    setRoute({ page: 'shop', bookId: null });
+  };
+
+  const goEvents = () => {
+    window.history.pushState({}, '', '/events');
+    setRoute({ page: 'events', bookId: null });
   };
 
   const showBookPage = (bookId) => {
@@ -128,12 +200,22 @@ function App() {
     <div className="page-shell">
       <header className="top-bar sticky-bar">
         <div className="top-left">
-          <div className="brand-logo">TC Books</div>
+          <button className="brand-logo" type="button" onClick={goHome}>
+            TC Books
+          </button>
         </div>
 
-        <button className="shop-button center-button" onClick={goHome}>
-          Shop Now
-        </button>
+        <div className="top-center">
+          <button className="home-button" onClick={goHome}>
+            Home Page
+          </button>
+          <button className="shop-button" onClick={goShop}>
+            Shop Now
+          </button>
+          <button className="event-button" onClick={goEvents}>
+            Events
+          </button>
+        </div>
 
         <button className="cart-button" onClick={toggleCart} aria-label="Open cart">
           <svg className="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -182,11 +264,23 @@ function App() {
 
       <main className="content">
         <div className="hero hero-page">
-          <h1>{route.page === 'book' && currentBook ? currentBook.title : 'Shop TC Books'}</h1>
+          <h1>
+            {route.page === 'book' && currentBook
+              ? currentBook.title
+              : route.page === 'events'
+              ? 'Events'
+              : route.page === 'shop'
+              ? 'Shop TC Books'
+              : 'Welcome to TC Books'}
+          </h1>
           {route.page === 'book' && currentBook ? (
             <p className="hero-copy">A polished children’s book page with clear details and easy ordering for families.</p>
-          ) : (
+          ) : route.page === 'events' ? (
+            <p className="hero-copy">Browse upcoming appearances and RSVP for each family-friendly event.</p>
+          ) : route.page === 'shop' ? (
             <p className="hero-copy">Browse selected children’s books for story time, bedtime, kindergarten, and home reading.</p>
+          ) : (
+            <p className="hero-copy">Welcome to TC Books — a playful collection of children’s stories for family reading, bedtime adventures, and classroom discovery.</p>
           )}
         </div>
 
@@ -223,7 +317,45 @@ function App() {
               </div>
             </div>
           </section>
-        ) : (
+        ) : route.page === 'events' ? (
+          <section className="events-grid fade-up">
+            <div className="event-card">
+              <div className="book-label detail-label">Multiple Dates</div>
+              <h2>Upcoming Events</h2>
+              <p className="hero-copy">Browse upcoming appearances and RSVP for each event.</p>
+            </div>
+            {events.map((eventItem) => (
+              <article key={eventItem.url} className="event-card fade-up">
+                <div className="event-row">
+                  <h3>
+                    <a href={eventItem.url} target="_blank" rel="noreferrer" className="event-link">
+                      {eventItem.title}
+                    </a>
+                  </h3>
+                  <span className="event-date">{eventItem.date}</span>
+                </div>
+                <p className="event-location">{eventItem.location}</p>
+                <a href={eventItem.url} target="_blank" rel="noreferrer" className="rsvp-button">
+                  RSVP
+                </a>
+              </article>
+            ))}
+          </section>
+        ) : route.page === 'updates' ? (
+          <section className="updates-page fade-up">
+            <div className="home-card">
+              <h2>Updates</h2>
+              <div className="updates-list">
+                {updates.map((item) => (
+                  <div key={item.date} className="update-item">
+                    <strong>{item.date}</strong>
+                    <p>{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : route.page === 'shop' ? (
           <section className="books-grid">
             {books.map((book, index) => (
               <article
@@ -256,6 +388,22 @@ function App() {
                 </button>
               </article>
             ))}
+          </section>
+        ) : (
+          <section className="home-welcome fade-up">
+            <div className="home-card home-card-hero">
+              <div className="home-card-content">
+                <h2>Stories that spark imagination</h2>
+                <p>
+                  Explore colorful books designed for young readers, families, and teachers. TC Books brings
+                  joyful characters, warm stories, and gentle lessons that make reading time extra special.
+                </p>
+                <p>
+                  Use the Shop Now button to browse our featured books, or visit Events to RSVP for author
+                  appearances and book fairs.
+                </p>
+              </div>
+            </div>
           </section>
         )}
       </main>
