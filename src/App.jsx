@@ -134,6 +134,27 @@ function App() {
     }
   }, [route, currentBook]);
 
+  useEffect(() => {
+    const preventContext = (event) => event.preventDefault();
+    const preventInspect = (event) => {
+      const key = event.key.toLowerCase();
+      if (
+        event.key === 'F12' ||
+        ((event.ctrlKey || event.metaKey) && event.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+        ((event.ctrlKey || event.metaKey) && key === 'u')
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', preventContext);
+    document.addEventListener('keydown', preventInspect);
+    return () => {
+      document.removeEventListener('contextmenu', preventContext);
+      document.removeEventListener('keydown', preventInspect);
+    };
+  }, []);
+
   const goHome = () => {
     window.history.pushState({}, '', '/');
     setRoute({ page: 'home', bookId: null });
